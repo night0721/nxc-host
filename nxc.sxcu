@@ -1,0 +1,17 @@
+{
+  "Version": "15.0.1",
+  "Name": "Image Uploader API",
+  "DestinationType": "ImageUploader",
+  "RequestMethod": "POST",
+  "RequestURL": "https://Image-Uploader.night0721.repl.co/api/files/create",
+  "Body": "binary",
+  "FileFormName": "file",
+  "Headers": {
+    "KEY": ""
+  },
+  "URL": "{json:url}",
+  "ThumbnailURL": "{json:thumb}",
+  "DeletionURL": "{json:del_url}",
+  "ErrorMessage": "{json:error}",
+  "FileFormName": "img"
+}
