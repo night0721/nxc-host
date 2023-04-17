@@ -1,10 +1,13 @@
-import oembed from "@/public/data/oembed.json";
+import oembed from "../../public/oembed.json";
 import Head from "next/head";
-export default function Header() {
+type Title = {
+  title: string;
+};
+export default function Header({ title }: Title) {
   return (
     <Head>
       <link rel="icon" type="image/png" href="/images/icon.png" />
-      <title>NightX Paste</title>
+      <title>{title}</title>
       <meta property="og:type" content="website" />
       <meta property="og:title" content={oembed.title} />
       <meta property="og:site_name" content={oembed.provider_name} />
@@ -25,7 +28,7 @@ export default function Header() {
       <meta name="twitter:title" content={oembed.title} />
       <link
         type="application/json+oembed"
-        href={process.env.NEXT_PUBLIC_HOST + "/data/oembed.json"}
+        href={`${process.env.NEXT_PUBLIC_HOST}/oembed.json`}
       />
     </Head>
   );

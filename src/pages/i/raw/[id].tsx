@@ -11,10 +11,10 @@ type Data = {
   height: number;
   kb: number;
 };
-export default function CodeDisplay({ id, width, height, kb }: Data) {
+export default function RawImage({ id, width, height, kb }: Data) {
   return (
     <>
-      <Header />
+      <Header title="NXC Image" />
       <Image
         src={`/images/${id}.png`}
         alt="image"

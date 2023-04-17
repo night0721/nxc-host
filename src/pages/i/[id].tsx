@@ -10,22 +10,10 @@ type Data = {
   height: number;
   kb: number;
 };
-export default function CodeDisplay({ id, width, height, kb }: Data) {
+export default function ImageDisplay({ id, width, height, kb }: Data) {
   return (
     <>
-      <Header />
-      <div className="bg">
-        <div className="sky">
-          <div className="star"></div>
-          <div className="star"></div>
-          <div className="star"></div>
-          <div className="star"></div>
-          <div className="star"></div>
-          <div className="star"></div>
-          <div className="star"></div>
-        </div>
-      </div>
-
+      <Header title="NXC Image" />
       <div className={styles.styles_box}>
         <div className={styles.file_info}>
           <div className={styles.file_name}>{id}.png</div>
