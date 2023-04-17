@@ -1,5 +1,4 @@
 import { GetServerSideProps } from "next";
-import "@/styles/CodeTheme.module.css";
 import Image from "next/image";
 import imageSize from "image-size";
 import fs from "fs";
