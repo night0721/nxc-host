@@ -21,7 +21,7 @@ export default function Shortener({ urls }: ShortURLs) {
         />
       </Head>
       <div className="container">
-        <h1 className="text-center">URL Shrinker</h1>
+        <h1 className="text-center">URL Shortener</h1>
         <form action="/api/url" method="POST" className="my-4 form">
           <div className="form-group">
             <label htmlFor="formGroupExampleInput">Long URL</label>
@@ -55,7 +55,7 @@ export default function Shortener({ urls }: ShortURLs) {
           </div>
           <br />
           <button className={style.btn} type="submit">
-            Shrink
+            Shorten
           </button>
         </form>
         <br />
