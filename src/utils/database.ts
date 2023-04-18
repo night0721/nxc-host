@@ -81,7 +81,6 @@ export async function createImage(id: string): Promise<string> {
     .toArray();
   const deleteKey = randomID(40);
   if (document.length == 1) {
-    console.log("test");
     await collection.updateOne(
       { filename: `${id}.png` },
       { $set: { deleteKey } }

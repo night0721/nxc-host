@@ -7,7 +7,6 @@ interface Data {
 }
 
 export default function CodeDisplay({ code }: Data) {
-  console.log(code);
   return (
     <>
       <Header title="NXC Paste" />
