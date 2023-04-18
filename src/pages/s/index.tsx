@@ -75,7 +75,11 @@ export default function Shortener({ urls }: ShortURLs) {
                     <a href={shortUrl.full}>{shortUrl.full}</a>
                   </td>
                   <td key={i}>
-                    <a href={shortUrl.short}>{shortUrl.short}</a>
+                    <a
+                      href={`${process.env.NEXT_PUBLIC_HOST}/s/${shortUrl.short}`}
+                    >
+                      {shortUrl.short}
+                    </a>
                   </td>
                 </tr>
               </>
