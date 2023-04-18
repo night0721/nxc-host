@@ -4,12 +4,16 @@ import Image from "next/image";
 import imageSize from "image-size";
 import fs from "fs";
 import Header from "@/components/Header";
+import { tmpdir } from "os";
+import { round } from "cath";
+
 type Data = {
   id: string;
   width: number;
   height: number;
   kb: number;
 };
+
 export default function ImageDisplay({ id, width, height, kb }: Data) {
   return (
     <>
@@ -42,14 +46,15 @@ export default function ImageDisplay({ id, width, height, kb }: Data) {
     </>
   );
 }
+
 export const getServerSideProps: GetServerSideProps = async context => {
   const id = context.params?.id;
-  if (!id || !fs.existsSync(`./public/images/${id}.png`)) {
+  if (!id || !fs.existsSync(`./${tmpdir()}/nxc/${id}.png`)) {
     return {
       notFound: true,
     };
   }
-  const path = `./public/images/${id}.png`;
+  const path = `./${tmpdir()}/nxc/${id}.png`;
   var stats = fs.statSync(path);
   return {
     props: {
@@ -60,7 +65,3 @@ export const getServerSideProps: GetServerSideProps = async context => {
     },
   };
 };
-
-function round(value: number, decimals: number) {
-  return Number(Math.round(Number(value + "e" + decimals)) + "e-" + decimals);
-}

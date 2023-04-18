@@ -73,12 +73,21 @@ export async function getImageDeleteKey(
 }
 
 export async function createImage(id: string): Promise<string> {
-  const collection = (await client).db("NXC").collection("images");
+  const collection = (await client).db("NXC").collection("photos.files");
+  const document = await collection
+    .find({ filename: `${id}.png` })
+    .sort({ metacritic: -1 })
+    .limit(1)
+    .toArray();
   const deleteKey = randomID(40);
-  await collection.insertOne({
-    id,
-    deleteKey,
-  });
+  if (document.length == 1) {
+    console.log("test");
+    await collection.updateOne(
+      { filename: `${id}.png` },
+      { $set: { deleteKey } }
+    );
+  }
+
   return deleteKey;
 }
 
@@ -197,7 +206,7 @@ export async function deletePaste(id: string): Promise<string> {
     .limit(1)
     .toArray();
   if (document.length == 1) {
-    collection.deleteOne({ id });
-    return "Sucess";
+    await collection.deleteOne({ id });
+    return "Success";
   } else return "Invalid";
 }
