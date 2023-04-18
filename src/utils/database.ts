@@ -22,6 +22,13 @@ export interface URLModel {
   deleteKey: string;
 }
 
+export interface Paste {
+  id: string;
+  value: string;
+  author?: string;
+  deleteKey: string;
+}
+
 const client = new MongoClient(
   process.env.MONGO as string,
   {
@@ -126,6 +133,71 @@ export async function deleteURL(deleteKey: string): Promise<string> {
     .toArray();
   if (document.length == 1) {
     collection.deleteOne({ deleteKey });
+    return "Sucess";
+  } else return "Invalid";
+}
+
+export async function createPaste(
+  value: string,
+  author?: string
+): Promise<string> {
+  const collection = (await client).db("NXC").collection("pastes");
+  const id = randomID(12);
+  const deleteKey = randomID(40);
+  await collection.insertOne({
+    id,
+    value,
+    author: author ? author : "",
+    deleteKey,
+  });
+  return id;
+}
+
+export async function getPaste(id: string): Promise<Paste | undefined> {
+  const collection = (await client).db("NXC").collection("pastes");
+  const document = await collection
+    .find({ id })
+    .sort({ metacritic: -1 })
+    .limit(1)
+    .toArray();
+  if (document.length == 1) {
+    return {
+      id: document[0].id,
+      value: document[0].value,
+      author: document[0].author ? document[0].author : "",
+      deleteKey: document[0].deleteKey,
+    };
+  } else return undefined;
+}
+
+export async function getPasteByKey(
+  deleteKey: string
+): Promise<Paste | undefined> {
+  const collection = (await client).db("NXC").collection("pastes");
+  const document = await collection
+    .find({ deleteKey })
+    .sort({ metacritic: -1 })
+    .limit(1)
+    .toArray();
+  if (document.length == 1) {
+    return {
+      id: document[0].id,
+      value: document[0].value,
+      author: document[0].author ? document[0].author : "",
+      deleteKey: document[0].deleteKey,
+    };
+  } else return undefined;
+}
+
+export async function deletePaste(id: string): Promise<string> {
+  const collection = (await client).db("NXC").collection("pastes");
+  const document = await collection
+    .find({ id })
+    .sort({ metacritic: -1 })
+    .limit(1)
+    .toArray();
+  if (document.length == 1) {
+    collection.deleteOne({ id });
     return "Sucess";
   } else return "Invalid";
 }

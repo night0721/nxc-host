@@ -1,6 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
-import { getImageDeleteKey, deleteURL } from "@/utils/database";
+import {
+  getImageDeleteKey,
+  deleteURL,
+  getPasteByKey,
+  deletePaste,
+} from "@/utils/database";
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,24 +17,21 @@ export default async function handler(
   if (req.query.type) {
     const type = req.query.type;
     if (type == "paste") {
-      for (const filename in fs.readdirSync(`./src/pastes`)) {
-        const file = require(`@/pastes/${filename}`);
-        if (file.deleteKey == deleteKey) {
-          fs.unlink(`./src/pastes/${filename}`, err => {
-            if (err) {
-              return res
-                .status(400)
-                .json({ message: "Unexpected error occured", code: 400 });
-            } else
-              return res
-                .status(200)
-                .json({ message: "File deleted", code: 200 });
-          });
+      const paste = await getPasteByKey(deleteKey);
+      if (paste) {
+        const response = await deletePaste(paste.id);
+        if (response == "Success") {
+          return res.status(200).json({ message: "Paste deleted", code: 200 });
+        } else {
+          return res
+            .status(400)
+            .json({ message: "Unexpected error occured", code: 400 });
         }
+      } else {
+        return res
+          .status(400)
+          .json({ message: "Invalid deletion key", code: 400 });
       }
-      return res
-        .status(400)
-        .json({ message: "Invalid deletion key", code: 400 });
     } else if (type == "image") {
       const image = await getImageDeleteKey(deleteKey);
       if (image) {

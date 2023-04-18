@@ -1,8 +1,8 @@
 import { GetServerSideProps } from "next";
-import fs from "fs";
 import Header from "@/components/Header";
 import Highlight from "react-highlight";
 import styles from "@/styles/Code.module.css";
+import { getPaste } from "@/utils/database";
 
 interface Data {
   code: string;
@@ -62,15 +62,15 @@ export default function CodeDisplay({ code }: Data) {
 export const getServerSideProps: GetServerSideProps<Data> = async ({
   params,
 }) => {
-  if (!fs.existsSync(`${process.cwd()}/src/pastes/${params?.id}.json`)) {
+  const paste = await getPaste(params?.id as string);
+  if (!paste) {
     return {
       notFound: true,
     };
   } else {
-    const model = require(`../../pastes/${params?.id}.json`);
     return {
       props: {
-        code: (model.value as string) || "",
+        code: paste.value || "",
       },
     };
   }

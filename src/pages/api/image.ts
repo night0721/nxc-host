@@ -2,7 +2,6 @@ import multer from "multer";
 import uploader from "../../middlewares/upload";
 import { NextApiRequest, NextApiResponse } from "next/dist/shared/lib/utils";
 import { randomID } from "cath";
-import fs from "fs";
 import { createImage } from "@/utils/database";
 
 export const config = {
