@@ -3,7 +3,7 @@ import uploader from "../../middlewares/upload";
 import { NextApiRequest, NextApiResponse } from "next/dist/shared/lib/utils";
 import { randomID } from "cath";
 import client, { createImage } from "@/utils/database";
-import { GridFsStorage } from "multer-gridfs-storage";
+import GridFsStorage from "multer-gridfs-storage";
 import { tmpdir } from "os";
 import { GridFSBucket } from "mongodb";
 import fs from "fs";

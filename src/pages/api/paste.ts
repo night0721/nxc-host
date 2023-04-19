@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next/dist/shared/lib/utils";
-import { randomID } from "cath";
 import { createPaste, getUser } from "@/utils/database";
 
 export default async function handler(
