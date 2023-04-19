@@ -49,19 +49,19 @@ export default function ImageDisplay({ id, width, height, kb }: Data) {
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const id = context.params?.id;
-  if (!id || !fs.existsSync(`./${tmpdir()}/nxc/${id}.png`)) {
+  if (!id || !fs.existsSync(`${tmpdir()}/nxc/${id}.png`)) {
     return {
       notFound: true,
     };
   }
-  const path = `./${tmpdir()}/nxc/${id}.png`;
+  const path = `${tmpdir()}/nxc/${id}.png`;
   var stats = fs.statSync(path);
   return {
     props: {
       id,
       width: imageSize(path).width,
       height: imageSize(path).height,
-      kb: round(stats.size / 1024, 2),
+      kb: Math.round(stats.size / 1024),
     },
   };
 };
