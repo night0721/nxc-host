@@ -4,7 +4,6 @@ import imageSize from "image-size";
 import fs from "fs";
 import Header from "@/components/Header";
 import { tmpdir } from "os";
-import { round } from "cath";
 
 type Data = {
   id: string;
@@ -39,7 +38,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
       id,
       width: imageSize(path).width,
       height: imageSize(path).height,
-      kb: round(stats.size / 1024, 2),
+      kb: (stats.size / 1024).toFixed(2),
     },
   };
 };
