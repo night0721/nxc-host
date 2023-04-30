@@ -2,11 +2,8 @@ import multer from "multer";
 import uploader from "../../middlewares/upload";
 import { NextApiRequest, NextApiResponse } from "next/dist/shared/lib/utils";
 import { randomID } from "cath";
-import client, { createImage } from "@/utils/database";
-import GridFsStorage from "multer-gridfs-storage";
-import { tmpdir } from "os";
-import { GridFSBucket } from "mongodb";
-import fs from "fs";
+import { createImage } from "@/utils/database";
+const { GridFsStorage } = require("multer-gridfs-storage");
 
 export const config = {
   api: {
@@ -18,7 +15,7 @@ const upload = multer({
   storage: new GridFsStorage({
     url: process.env.MONGO as string,
     options: { useNewUrlParser: true, useUnifiedTopology: true },
-    file: (req, file) => {
+    file: () => {
       const id = randomID(12);
       return {
         bucketName: "photos",
@@ -27,14 +24,6 @@ const upload = multer({
       };
     },
   }),
-  // storage: multer.diskStorage({
-  //   destination: (req, file, cb) => {
-  //     cb(null, "./public/images");
-  //   },
-  //   filename: (req, file, cb) => {
-  //     cb(null, `${randomID(12)}.png`);
-  //   },
-  // }),
 }).single("file");
 
 export default async function handler(
@@ -46,15 +35,6 @@ export default async function handler(
       await uploader(req, res, upload);
       const id = req.file.id;
       const deleteKey = await createImage(id);
-      const bucket = new GridFSBucket((await client).db("NXC"), {
-        bucketName: "photos",
-      });
-      if (!fs.existsSync(`${tmpdir()}/nxc`)) {
-        fs.mkdirSync(`${tmpdir()}/nxc`);
-      }
-      bucket
-        .openDownloadStreamByName(id + ".png")
-        .pipe(fs.createWriteStream(`${tmpdir()}/nxc/${id}.png`));
       res.status(200).send({
         url: `${process.env.NEXT_PUBLIC_HOST}/i/${id}`,
         deleteUrl: `${process.env.NEXT_PUBLIC_HOST}/api/image?key=${deleteKey}`,

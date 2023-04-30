@@ -1,44 +1,43 @@
 import { GetServerSideProps } from "next";
 import Image from "next/image";
-import imageSize from "image-size";
-import fs from "fs";
 import Header from "@/components/Header";
-import { tmpdir } from "os";
+import { Data } from "../[id]";
+import { useState } from "react";
+import { getImageChunk } from "@/utils/database";
 
-type Data = {
-  id: string;
-  width: number;
-  height: number;
-  kb: number;
-};
-export default function RawImage({ id, width, height, kb }: Data) {
+export default function RawImage({ id, bin }: Data) {
+  const [paddingTop, setPaddingTop] = useState("0");
   return (
     <>
       <Header title="NXC Image" />
-      <Image
-        src={`/images/${id}.png`}
-        alt="image"
-        width={width}
-        height={height}
-      />
+      <div style={{ paddingTop, position: "relative" }}>
+        <Image
+          src={`data:image/png;base64,${bin}`}
+          alt="image"
+          layout="fill"
+          objectFit="contain"
+          onLoad={({ target }) => {
+            const { naturalWidth, naturalHeight } = target as HTMLImageElement;
+            setPaddingTop(`calc(100% / (${naturalWidth} / ${naturalHeight}}))`);
+          }}
+        />
+      </div>
     </>
   );
 }
 export const getServerSideProps: GetServerSideProps = async context => {
   const id = context.params?.id;
-  if (!id || !fs.existsSync(`${tmpdir()}/nxc/${id}.png`)) {
+  const bin = await getImageChunk(id as string);
+  if (bin) {
+    return {
+      props: {
+        id,
+        bin,
+      },
+    };
+  } else {
     return {
       notFound: true,
     };
   }
-  const path = `${tmpdir()}/nxc/${id}.png`;
-  var stats = fs.statSync(path);
-  return {
-    props: {
-      id,
-      width: imageSize(path).width,
-      height: imageSize(path).height,
-      kb: (stats.size / 1024).toFixed(2),
-    },
-  };
 };

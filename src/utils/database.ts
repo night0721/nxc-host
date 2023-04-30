@@ -1,5 +1,5 @@
-import { randomID } from "cath";
-import { MongoClientOptions, MongoClient } from "mongodb";
+import * as cath from "cath";
+import { MongoClientOptions, MongoClient, GridFSBucket } from "mongodb";
 
 interface User {
   username: string;
@@ -55,20 +55,18 @@ export async function getUser(key: string): Promise<User | undefined> {
   } else return undefined;
 }
 
-export async function getImageDeleteKey(
+export async function deleteImage(
   deleteKey: string
-): Promise<Image | undefined> {
-  const collection = (await client).db("NXC").collection("images");
+): Promise<string | undefined> {
+  const collection = (await client).db("NXC").collection("photos.files");
   const document = await collection
     .find({ deleteKey })
     .sort({ metacritic: -1 })
     .limit(1)
     .toArray();
   if (document.length == 1) {
-    return {
-      id: document[0].id,
-      deleteKey: document[0].deleteKey,
-    };
+    await collection.findOneAndDelete({ deleteKey });
+    return "Deleted";
   } else return undefined;
 }
 
@@ -79,14 +77,13 @@ export async function createImage(id: string): Promise<string> {
     .sort({ metacritic: -1 })
     .limit(1)
     .toArray();
-  const deleteKey = randomID(40);
+  const deleteKey = cath.randomID(40);
   if (document.length == 1) {
     await collection.updateOne(
       { filename: `${id}.png` },
       { $set: { deleteKey } }
     );
   }
-
   return deleteKey;
 }
 
@@ -122,7 +119,7 @@ export async function createURL(
     .limit(1)
     .toArray();
   if (document.length) return "Exist";
-  const deleteKey = randomID(40);
+  const deleteKey = cath.randomID(40);
   await collection.insertOne({
     full,
     short,
@@ -150,8 +147,8 @@ export async function createPaste(
   author?: string
 ): Promise<string> {
   const collection = (await client).db("NXC").collection("pastes");
-  const id = randomID(12);
-  const deleteKey = randomID(40);
+  const id = cath.randomID(12);
+  const deleteKey = cath.randomID(40);
   await collection.insertOne({
     id,
     value,
@@ -208,4 +205,24 @@ export async function deletePaste(id: string): Promise<string> {
     await collection.deleteOne({ id });
     return "Success";
   } else return "Invalid";
+}
+
+export async function getGridFsBucket() {
+  return new GridFSBucket((await client).db("NXC"), {
+    bucketName: "photos",
+  });
+}
+
+export async function getImageChunk(id: string) {
+  const collection = (await client).db("NXC").collection("photos.chunks");
+  const document = await collection
+    .find({ files_id: id })
+    .sort({ metacritic: -1 })
+    .limit(1)
+    .toArray();
+  if (document.length == 1) {
+    return document[0].data.toString("base64");
+  } else {
+    return undefined;
+  }
 }

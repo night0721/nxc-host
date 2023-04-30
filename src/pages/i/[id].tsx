@@ -1,33 +1,37 @@
 import { GetServerSideProps } from "next";
 import styles from "@/styles/Image.module.css";
 import Image from "next/image";
-import imageSize from "image-size";
-import fs from "fs";
 import Header from "@/components/Header";
-import { tmpdir } from "os";
+import { getImageChunk } from "@/utils/database";
+import { useState } from "react";
 
-type Data = {
+export type Data = {
   id: string;
-  width: number;
-  height: number;
-  kb: number;
+  bin: Buffer;
 };
 
-export default function ImageDisplay({ id, width, height, kb }: Data) {
+export default function ImageDisplay({ id, bin }: Data) {
+  const [paddingTop, setPaddingTop] = useState("0");
   return (
     <>
       <Header title="NXC Image" />
       <div className={styles.styles_box}>
-        <div className={styles.file_info}>
-          <div className={styles.file_name}>{id}.png</div>
-          <div className={styles.file_size}>{kb} KB</div>
-        </div>
-        <div className={styles.image_container}>
+        <div
+          className={styles.image_container}
+          style={{ paddingTop, position: "relative" }}
+        >
           <Image
-            src={`/images/${id}.png`}
+            src={`data:image/png;base64,${bin}`}
             alt="image"
-            width={width}
-            height={height}
+            layout="fill"
+            objectFit="contain"
+            onLoad={({ target }) => {
+              const { naturalWidth, naturalHeight } =
+                target as HTMLImageElement;
+              setPaddingTop(
+                `calc(100% / (${naturalWidth} / ${naturalHeight}}))`
+              );
+            }}
           />
         </div>
         <div className={styles.buttons_container}>
@@ -48,19 +52,17 @@ export default function ImageDisplay({ id, width, height, kb }: Data) {
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const id = context.params?.id;
-  if (!id || !fs.existsSync(`${tmpdir()}/nxc/${id}.png`)) {
+  const bin = await getImageChunk(id as string);
+  if (bin) {
+    return {
+      props: {
+        id,
+        bin,
+      },
+    };
+  } else {
     return {
       notFound: true,
     };
   }
-  const path = `${tmpdir()}/nxc/${id}.png`;
-  var stats = fs.statSync(path);
-  return {
-    props: {
-      id,
-      width: imageSize(path).width,
-      height: imageSize(path).height,
-      kb: (stats.size / 1024).toFixed(2),
-    },
-  };
 };

@@ -1,10 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import fs from "fs";
 import {
-  getImageDeleteKey,
   deleteURL,
   getPasteByKey,
   deletePaste,
+  deleteImage,
 } from "@/utils/database";
 
 export default async function handler(
@@ -33,16 +32,9 @@ export default async function handler(
           .json({ message: "Invalid deletion key", code: 400 });
       }
     } else if (type == "image") {
-      const image = await getImageDeleteKey(deleteKey);
-      if (image) {
-        fs.unlink(`./public/images/${image.id}.png`, err => {
-          if (err) {
-            return res
-              .status(400)
-              .json({ message: "Unexpected error occured", code: 400 });
-          } else
-            return res.status(200).json({ message: "File deleted", code: 200 });
-        });
+      const image = await deleteImage(deleteKey);
+      if (image == "Deleted") {
+        return res.status(200).json({ message: "File deleted", code: 200 });
       } else {
         return res
           .status(400)
