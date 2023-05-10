@@ -39,18 +39,16 @@ If you have any question, please join our [Discord Server](https://discord.gg/Sb
 ## Routes
 
 ```md
-/s -> URL Shortener\n
-/s/:id -> Redirecting to Long URL\n
-/p -> Paste Bin\n
-/p/:id -> Paste by specific ID\n
-/raw/:id -> Raw Paste by specific ID\n
-/i -> Image Uploader\n
-/i/:id -> Image by specific ID\n
-/i/raw/:id -> Raw Image by specific ID\n
-/api/:type/delete -> Delete model by type\n
-/api/files -> Get all files in server directory\n
-/api/temp -> Get temporary files in /tmp/nxc\n
-POST /api/image -> Send new image to server\n
-POST /api/paste -> Send new paste to server\n
-POST /api/url -> Send new URL to server\n
+/s -> URL Shortener
+/s/:id -> Redirecting to Long URL
+/p -> Paste Bin
+/p/:id -> Paste by specific ID
+/raw/:id -> Raw Paste by specific ID
+/i -> Image Uploader
+/i/:id -> Image by specific ID
+/i/raw/:id -> Raw Image by specific ID
+/api/:type/delete -> Delete model by type
+POST /api/image -> Send new image to server
+POST /api/paste -> Send new paste to server
+POST /api/url -> Send new URL to server
 ```
