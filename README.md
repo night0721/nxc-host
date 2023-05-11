@@ -11,7 +11,7 @@ If you like the repository, please consider giving it a star⭐!
 
 # Deployment
 
-You can either watch the [video](https://www.youtube.com/watch?v=) or follow the steps below.
+You can either watch the [video](https://youtu.be/VhNGKyPGF2g) or follow the steps below.
 
 First of all, you need to install [NodeJS](https://nodejs.org/en/) and [MongoDB](https://www.youtube.com/watch?v=aygw0wjW5bA) in your server.
 
