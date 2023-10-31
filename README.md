@@ -1,6 +1,5 @@
 <h1 align="center"> NXC Host </h1> 
 <p align="center">
-    <a href= "https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt='Licence CC BY-NC-SA 4.0' src ="https://mirrors.creativecommons.org/presskit/buttons/88x31/svg/by-nc-sa.svg" width="82">
     <a href="https://ko-fi.com/I2I35XISJ" target="_blank"><img alt='Kofi' src="https://img.shields.io/static/v1?label=Support%20Us&message=KO.FI&color=ff5e5b&logo=kofi&logoColor=white&style=for-the-badge&scale=1.4">
     </a> <br>
 </p>
