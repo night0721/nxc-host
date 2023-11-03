@@ -8,11 +8,10 @@ type Title = {
 export default function Header({ title }: Title) {
   return (
     <Head>
-      <link rel="icon" type="image/png" href="/images/icon.png" />
+      <link rel="icon" type="image/png" href="/images/icon.jpg" />
       <title>{title}</title>
 
       {/* HTML Meta Tags */}
-      <title>{title}</title>
       <meta name="theme-color" content="#deb4d1" data-react-helmet="true" />
       <meta name="description" content={oembed.bio} />
 
